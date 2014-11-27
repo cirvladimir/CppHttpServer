@@ -1,0 +1,6 @@
+This is a c++ http server for handling http requests.
+Features:
+1. GET
+2. POST
+
+It does not support https.
