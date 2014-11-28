@@ -4,3 +4,8 @@ Features:
 2. POST
 
 It does not support https.
+
+Usage:
+1. include server.h
+2. compile with -pthread to link the multithreading pthread library (ex: g++ -pthread example.cpp)
+3. check out example for the api

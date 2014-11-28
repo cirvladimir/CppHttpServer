@@ -11,7 +11,7 @@ public:
 	cout << request.method << " request to " << request.path << endl;
 	if (request.method == "POST")
 	{
-	    cout << "post body" << endl << request.body << endl;
+	    cout << "post body:" << endl << request.body << endl;
 	}
 	HTTPResponse response;
 	response.code = 200;
@@ -26,4 +26,11 @@ int main()
     MyHandler hnd;
     HTTPServer server(&hnd, 1122);
     server.start();
+    cout << "Serving on port 1122" << endl;
+    cout << "Press enter at any time to stop" << endl;
+    string str;
+    //cin.getline(&line, &size);
+    getline(cin, str);
+    server.stop();
+    return 0;
 }
