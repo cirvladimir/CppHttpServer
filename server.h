@@ -34,7 +34,7 @@ public:
 class HTTPRequestHandler 
 {
 public:
-    HTTPResponse handleRequest(HTTPRequest request) {}
+    virtual HTTPResponse handleRequest(HTTPRequest request) = 0;
 };
 
 class HTTPServer 
@@ -83,8 +83,7 @@ public:
 			&clilen);
 	    if (newsockfd < 0) 
 		error("ERROR on accept");
-	    bzero(buffer,HTTP_SERVER_BUFFER_SIZE);
-	    n = read(newsockfd,buffer,HTTP_SERVER_BUFFER_SIZE - 1);
+	    n = read(newsockfd,buffer,HTTP_SERVER_BUFFER_SIZE);
 	    if (n < 0) error("ERROR reading from socket");
 	    HTTPRequest request;
 	    request.method = "";
@@ -128,21 +127,28 @@ public:
 		while (n == HTTP_SERVER_BUFFER_SIZE)
 		{
 		    ind = 0;
-		    n = read(newsockfd,buffer,HTTP_SERVER_BUFFER_SIZE - 1);
+		    n = read(newsockfd,buffer,HTTP_SERVER_BUFFER_SIZE);
 		    for (; ind < n; ind++) {
 			request.body += buffer[ind];
 		    }
 		}
 	    }
-	    //HTTPResponse response = handler->handleRequest(request);
-	    /*std::stringstream respStr;
+	    HTTPResponse response = handler->handleRequest(request);
+	    std::stringstream respStr;
 	    respStr << "HTTP/1.1 " << response.code << " OK\n" <<
 		"Content-Type: " << response.contentType << "; charset=utf-8\n" << 
 		"Content-Length: " << response.body.size() << "\n\n" << 
 		response.body;
-	    n = write(newsockfd, respStr.str().c_str(), respStr.gcount());*/
+	    /*respStr.flush();
+	    const char * rc = respStr.str().c_str();
+	    std::cout << respStr.gcount() << std::endl;
+	    for (int i = 0; i < respStr.gcount(); i++)
+	    {
+		std::cout << rc[i];
+	    }*/
+	    n = write(newsockfd, respStr.str().c_str(), respStr.str().size());
 	    //printf("Here is the message: %s\n",buffer);
-	    n = write(newsockfd,"<html><body><form method='post'><button>go</button></form></body></html>                                                ",75);
+	    //n = write(newsockfd,"<html><body><form method='post'><button>go</button></form></body></html>                                                ",75);
 	    if (n < 0) error("ERROR writing to socket");
 	    close(newsockfd);
 	}
