@@ -45,12 +45,12 @@ private:
 	perror(msg);
 	exit(1);
     }
-    HTTPRequestHandler handler;
+    HTTPRequestHandler * handler;
     int portno;
     bool started;
     int sockfd;
 public:
-    HTTPServer(HTTPRequestHandler hndl, int port) 
+    HTTPServer(HTTPRequestHandler * hndl, int port) 
     {
 	handler = hndl;
 	portno = port;
@@ -134,18 +134,22 @@ public:
 		    }
 		}
 	    }
-	    HTTPResponse response = handler.handleRequest(request);
-	    std::stringstream respStr;
+	    //HTTPResponse response = handler->handleRequest(request);
+	    /*std::stringstream respStr;
 	    respStr << "HTTP/1.1 " << response.code << " OK\n" <<
 		"Content-Type: " << response.contentType << "; charset=utf-8\n" << 
 		"Content-Length: " << response.body.size() << "\n\n" << 
 		response.body;
-	    n = write(newsockfd, respStr.str().c_str(), respStr.gcount());
+	    n = write(newsockfd, respStr.str().c_str(), respStr.gcount());*/
 	    //printf("Here is the message: %s\n",buffer);
-	    //n = write(newsockfd,"<html><body><form method='post'><button>go</button></form></body></html>                                                ",75);
+	    n = write(newsockfd,"<html><body><form method='post'><button>go</button></form></body></html>                                                ",75);
 	    if (n < 0) error("ERROR writing to socket");
 	    close(newsockfd);
 	}
 	close(sockfd);
+    }
+    void test()
+    {
+	handler->handleRequest(HTTPRequest());
     }
 };
