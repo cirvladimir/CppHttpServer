@@ -1,5 +1,5 @@
-/* A simple server in the internet domain using TCP
-   The port number is passed as an argument */
+// The server class
+
 #include <cstdlib>
 #include <cstring>
 #include <unistd.h>
@@ -100,7 +100,6 @@ public:
 	int newsockfd = accept(sockfd, 
 		    (struct sockaddr *) &cli_addr, 
 		    &clilen);
-	
 	int rc = pthread_create(&acceptThreadId, NULL, invokeAsyncAccept, (void*)this);
 	if (rc)
 	    error("ERROR on starting new thread");
@@ -166,16 +165,7 @@ public:
 	    "Content-Type: " << response.contentType << "; charset=utf-8\n" << 
 	    "Content-Length: " << response.body.size() << "\n\n" << 
 	    response.body;
-	/*respStr.flush();
-	const char * rc = respStr.str().c_str();
-	std::cout << respStr.gcount() << std::endl;
-	for (int i = 0; i < respStr.gcount(); i++)
-	{
-	    std::cout << rc[i];
-	}*/
 	n = write(newsockfd, respStr.str().c_str(), respStr.str().size());
-	//printf("Here is the message: %s\n",buffer);
-	//n = write(newsockfd,"<html><body><form method='post'><button>go</button></form></body></html>                                                ",75);
 	if (n < 0) error("ERROR writing to socket");
 	close(newsockfd);
 	pthread_exit(NULL);
